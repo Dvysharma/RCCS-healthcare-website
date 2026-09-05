@@ -11,16 +11,15 @@ export default function Hero({ onNavigate, onOpenQuoteModal }) {
           <div>
             <div className="hero-badge">
               <ShieldCheck size={16} />
-              <span>Hospital Consumables & Medical Supplies</span>
+              <span>Your Trusted Partner for Surgical & Healthcare Solutions</span>
             </div>
 
             <h1 className="hero-title">
-              Reliable Healthcare Supplies, <br />
-              <span>When Your Facility Needs Them.</span>
+              Royal Crown Healthcare Ventures
             </h1>
 
             <p className="hero-subtitle">
-              Supplying hospitals, clinics, healthcare professionals and institutions with dependable medical consumables, surgical products and essential healthcare supplies across Dehradun and Uttarakhand.
+              Supplying Surgical Equipment, Medical Devices, Hospital Consumables & Healthcare Solutions.
             </p>
 
             <div className="hero-actions">
@@ -28,7 +27,7 @@ export default function Hero({ onNavigate, onOpenQuoteModal }) {
                 className="btn btn-primary btn-lg"
                 onClick={() => onNavigate('/products')}
               >
-                <span>Browse Products</span>
+                <span>Explore Products</span>
                 <ArrowRight size={16} />
               </button>
 

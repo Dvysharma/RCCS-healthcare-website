@@ -143,6 +143,83 @@
   color: #FFFFFF;
 }
 
+.topbar-email,
+.topbar-location,
+.topbar-gstin {
+  display: none;
+}
+
+.desktop-search,
+.header-cta {
+  display: none;
+}
+
+.mobile-search-toggle {
+  display: flex;
+}
+
+.mobile-search-panel {
+  display: block;
+  padding-bottom: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .topbar-email,
+  .topbar-gstin {
+    display: inline-flex;
+  }
+
+  .header-cta {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 1024px) {
+  .topbar-location,
+  .desktop-search {
+    display: inline-flex;
+  }
+
+  .desktop-search {
+    width: 220px;
+  }
+
+  .mobile-search-toggle,
+  .mobile-search-panel {
+    display: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .header-account,
+  .header-quote,
+  .header-cta {
+    display: none;
+  }
+
+  .header-container {
+    gap: 0.5rem;
+  }
+
+  .main-header .brand-image {
+    max-width: 145px;
+  }
+
+  .header-actions {
+    gap: 0.375rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar-right {
+    display: none;
+  }
+
+  .topbar-content {
+    justify-content: flex-start;
+  }
+}
+
 .topbar-badge {
   background-color: rgba(21, 165, 162, 0.2);
   color: #5EEAD4;
@@ -157,8 +234,8 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: #FFFFFF;
-  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-primary-700);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: var(--shadow-sm);
 }
 
@@ -177,6 +254,33 @@
   gap: 0.75rem;
   text-decoration: none;
   flex-shrink: 0;
+}
+
+.main-header .nav-link,
+.main-header .action-icon-btn,
+.main-header .mobile-menu-toggle {
+  color: #FFFFFF;
+}
+
+.main-header .nav-link:hover,
+.main-header .nav-link.active {
+  color: #FFFFFF;
+}
+
+.main-header .nav-link.active::after {
+  background-color: #FFFFFF;
+}
+
+.main-header .action-icon-btn,
+.main-header .mobile-menu-toggle {
+  border-color: rgba(255, 255, 255, 0.35);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.main-header .action-icon-btn:hover,
+.main-header .mobile-menu-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+  color: #FFFFFF;
 }
 
 .brand-mark {
@@ -277,8 +381,7 @@
   margin-top: 0.75rem;
 }
 
-.nav-item-dropdown:hover .mega-dropdown-menu,
-.nav-item-dropdown:focus-within .mega-dropdown-menu {
+.nav-item-dropdown.is-open .mega-dropdown-menu {
   display: grid;
 }
 
@@ -1161,4 +1264,209 @@ textarea.form-control {
 
 .footer-bottom-links a:hover {
   color: #FFFFFF;
+}
+
+.footer-attribution {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: #94A3B8;
+  font-size: 0.75rem;
+}
+
+.footer-social-links {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.footer-social-links a {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 50%;
+  font-size: 1rem;
+}
+
+.footer-social-links a:hover {
+  color: var(--color-primary-900);
+  background-color: #FFFFFF;
+}
+
+.footer-consultancy-links {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.875rem 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  color: #CBD5E1;
+  font-size: 0.75rem;
+}
+
+.footer-consultancy-links a {
+  color: #FFFFFF;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.clients-section {
+  background: #FFFFFF;
+  border-top: 1px solid var(--color-border);
+}
+
+.clients-logo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.client-logo-card {
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  background: #FFFFFF;
+}
+
+.client-logo-card img {
+  width: 100%;
+  height: 58px;
+  object-fit: contain;
+}
+
+.client-logo-card span {
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.clients-empty-state {
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  border: 1px dashed var(--color-border-strong);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.admin-image-upload-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.admin-image-upload {
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.625rem;
+  border: 1px dashed var(--color-border-strong);
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.admin-image-upload input {
+  width: 100%;
+  font-size: 0.6875rem;
+}
+
+.admin-image-upload img {
+  width: 100%;
+  height: 48px;
+  object-fit: contain;
+}
+
+.admin-list-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.admin-list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--color-border);
+  background: #FFFFFF;
+}
+
+.admin-list-row > div:not(.admin-client-preview) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.admin-list-row span {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
+
+.admin-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.admin-client-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-client-preview img {
+  width: 64px;
+  height: 42px;
+  object-fit: contain;
+  border: 1px solid var(--color-border);
+}
+
+.btn-danger {
+  background: var(--color-danger-bg);
+  border: 1px solid #FECACA;
+  color: var(--color-danger);
+}
+
+.btn-danger:hover {
+  background: #FEE2E2;
+  color: var(--color-danger);
+}
+
+@media (max-width: 640px) {
+  .admin-image-upload-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-list-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-attribution {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }

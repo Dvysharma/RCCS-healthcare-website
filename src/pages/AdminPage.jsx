@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useCMS } from '../context/CMSContext';
-import { CATEGORIES } from '../data/categories';
 import Breadcrumbs from '../components/layout/Breadcrumbs';
 import { 
   Package, 
@@ -14,19 +13,30 @@ import {
   RotateCcw, 
   CheckCircle2,
   AlertCircle,
-  Save
+  Save,
+  Building2,
+  FileText
 } from 'lucide-react';
 
 export default function AdminPage({ onNavigate }) {
   const { 
     products, 
     categories, 
+    clients,
+    blogs,
     enquiries, 
     orders, 
     siteConfig,
     addProduct, 
     updateProduct, 
     deleteProduct, 
+    addCategory,
+    deleteCategory,
+    moveCategory,
+    addClient,
+    deleteClient,
+    addBlog,
+    deleteBlog,
     updateEnquiryStatus,
     updateOrderStatus,
     updateSiteConfig,
@@ -34,7 +44,7 @@ export default function AdminPage({ onNavigate }) {
     exportDataJSON
   } = useCMS();
 
-  const [activeTab, setActiveTab] = useState('products'); // 'products', 'enquiries', 'orders', 'settings'
+  const [activeTab, setActiveTab] = useState('products'); // 'products', 'categories', 'clients', 'blogs', 'enquiries', 'orders', 'settings'
   const [isAddingProduct, setIsAddingProduct] = useState(false);
 
   // New Product Form State
@@ -51,8 +61,12 @@ export default function AdminPage({ onNavigate }) {
     moq: '1 Box',
     stock: 'In Stock',
     featured: false,
-    images: ['https://images.unsplash.com/photo-1584744982491-665216d95f8b?auto=format&fit=crop&w=800&q=80']
+    images: ['https://images.unsplash.com/photo-1584744982491-665216d95f8b?auto=format&fit=crop&w=800&q=80', '', '', '', '', '', '']
   });
+
+  const [newCategory, setNewCategory] = useState({ name: '', shortName: '', description: '', image: '' });
+  const [newClient, setNewClient] = useState({ name: '', logo: '' });
+  const [newBlog, setNewBlog] = useState({ title: '', category: '', author: '', excerpt: '', image: '', contentText: '' });
 
   // Settings State
   const [configForm, setConfigForm] = useState({
@@ -84,8 +98,55 @@ export default function AdminPage({ onNavigate }) {
       moq: '1 Box',
       stock: 'In Stock',
       featured: false,
-      images: ['https://images.unsplash.com/photo-1584744982491-665216d95f8b?auto=format&fit=crop&w=800&q=80']
+      images: ['https://images.unsplash.com/photo-1584744982491-665216d95f8b?auto=format&fit=crop&w=800&q=80', '', '', '', '', '', '']
     });
+  };
+
+  const readImageFile = (file, onLoad) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => onLoad(event.target.result);
+    reader.readAsDataURL(file);
+  };
+
+  const handleProductImageUpload = (index, file) => {
+    readImageFile(file, (image) => {
+      setNewProd((prev) => {
+        const images = [...prev.images];
+        images[index] = image;
+        return { ...prev, images };
+      });
+    });
+  };
+
+  const handleAddCategorySubmit = (e) => {
+    e.preventDefault();
+    if (!newCategory.name) return;
+    addCategory({ ...newCategory, image: newCategory.image || 'https://images.unsplash.com/photo-1584744982491-665216d95f8b?auto=format&fit=crop&w=800&q=80' });
+    setNewCategory({ name: '', shortName: '', description: '', image: '' });
+  };
+
+  const handleAddClientSubmit = (e) => {
+    e.preventDefault();
+    if (!newClient.name || !newClient.logo) return;
+    addClient(newClient);
+    setNewClient({ name: '', logo: '' });
+  };
+
+  const handleAddBlogSubmit = (e) => {
+    e.preventDefault();
+    if (!newBlog.title || !newBlog.excerpt || !newBlog.image) return;
+    addBlog({
+      title: newBlog.title,
+      category: newBlog.category || 'Healthcare Insights',
+      author: newBlog.author || 'Royal Crown Healthcare Ventures',
+      excerpt: newBlog.excerpt,
+      image: newBlog.image,
+      readTime: '5 min read',
+      tags: [],
+      content: [{ type: 'paragraph', text: newBlog.contentText || newBlog.excerpt }]
+    });
+    setNewBlog({ title: '', category: '', author: '', excerpt: '', image: '', contentText: '' });
   };
 
   const handleSaveSettings = (e) => {
@@ -151,6 +212,30 @@ export default function AdminPage({ onNavigate }) {
             >
               <Package size={16} />
               <span>Products ({products.length})</span>
+            </div>
+
+            <div
+              className={`admin-nav-item ${activeTab === 'categories' ? 'active' : ''}`}
+              onClick={() => setActiveTab('categories')}
+            >
+              <Package size={16} />
+              <span>Categories ({categories.length})</span>
+            </div>
+
+            <div
+              className={`admin-nav-item ${activeTab === 'clients' ? 'active' : ''}`}
+              onClick={() => setActiveTab('clients')}
+            >
+              <Building2 size={16} />
+              <span>Client Logos ({clients.length})</span>
+            </div>
+
+            <div
+              className={`admin-nav-item ${activeTab === 'blogs' ? 'active' : ''}`}
+              onClick={() => setActiveTab('blogs')}
+            >
+              <FileText size={16} />
+              <span>Blogs ({blogs.length})</span>
             </div>
 
             <div
@@ -243,7 +328,7 @@ export default function AdminPage({ onNavigate }) {
                           value={newProd.category}
                           onChange={(e) => setNewProd({ ...newProd, category: e.target.value })}
                         >
-                          {CATEGORIES.map((cat) => (
+                          {categories.map((cat) => (
                             <option key={cat.id} value={cat.slug}>{cat.name}</option>
                           ))}
                         </select>
@@ -271,6 +356,23 @@ export default function AdminPage({ onNavigate }) {
                         value={newProd.shortDescription}
                         onChange={(e) => setNewProd({ ...newProd, shortDescription: e.target.value, description: e.target.value })}
                       />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Product Photos (up to 7)</label>
+                      <div className="admin-image-upload-grid">
+                        {newProd.images.map((image, index) => (
+                          <label className="admin-image-upload" key={index}>
+                            <span>Photo {index + 1}</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => handleProductImageUpload(index, e.target.files[0])}
+                            />
+                            {image && <img src={image} alt={`Product preview ${index + 1}`} />}
+                          </label>
+                        ))}
+                      </div>
                     </div>
 
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginTop: '1rem' }}>
@@ -340,7 +442,89 @@ export default function AdminPage({ onNavigate }) {
               </div>
             )}
 
-            {/* 2. ENQUIRIES & RFQ TRACKER */}
+            {/* 2. CATEGORY MANAGEMENT */}
+            {activeTab === 'categories' && (
+              <div className="admin-content-card">
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-primary-900)' }}>Product Category Manager</h2>
+                  <span style={{ fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}>Create, delete, and reorder the categories shown across the website.</span>
+                </div>
+                <form onSubmit={handleAddCategorySubmit} className="form-row form-row-2" style={{ marginBottom: '2rem' }}>
+                  <div className="form-group"><label className="form-label required">Category Name</label><input className="form-control" required value={newCategory.name} onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })} /></div>
+                  <div className="form-group"><label className="form-label">Short Name</label><input className="form-control" value={newCategory.shortName} onChange={(e) => setNewCategory({ ...newCategory, shortName: e.target.value })} /></div>
+                  <div className="form-group"><label className="form-label">Description</label><textarea className="form-control" rows={2} value={newCategory.description} onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })} /></div>
+                  <div className="form-group"><label className="form-label">Image URL</label><input className="form-control" type="url" value={newCategory.image} onChange={(e) => setNewCategory({ ...newCategory, image: e.target.value })} /></div>
+                  <button className="btn btn-primary btn-sm" type="submit"><Plus size={14} /> Add Category</button>
+                </form>
+                <div className="admin-list-stack">
+                  {categories.map((category, index) => (
+                    <div className="admin-list-row" key={category.id}>
+                      <div><strong>{category.name}</strong><span>{category.slug}</span></div>
+                      <div className="admin-row-actions">
+                        <button className="btn btn-secondary btn-sm" type="button" disabled={index === 0} onClick={() => moveCategory(category.id, -1)}>Up</button>
+                        <button className="btn btn-secondary btn-sm" type="button" disabled={index === categories.length - 1} onClick={() => moveCategory(category.id, 1)}>Down</button>
+                        <button className="btn btn-danger btn-sm" type="button" onClick={() => deleteCategory(category.id)}><Trash2 size={14} /> Delete</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 3. CLIENT LOGO MANAGEMENT */}
+            {activeTab === 'clients' && (
+              <div className="admin-content-card">
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-primary-900)' }}>Our Clients</h2>
+                  <span style={{ fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}>Upload client partner logos for the homepage.</span>
+                </div>
+                <form onSubmit={handleAddClientSubmit} className="form-row form-row-2" style={{ marginBottom: '2rem' }}>
+                  <div className="form-group"><label className="form-label required">Client / Institution Name</label><input className="form-control" required value={newClient.name} onChange={(e) => setNewClient({ ...newClient, name: e.target.value })} /></div>
+                  <div className="form-group"><label className="form-label required">Logo Image</label><input className="form-control" required type="file" accept="image/*" onChange={(e) => readImageFile(e.target.files[0], (logo) => setNewClient({ ...newClient, logo }))} /></div>
+                  <button className="btn btn-primary btn-sm" type="submit"><Plus size={14} /> Add Client Logo</button>
+                </form>
+                <div className="admin-list-stack">
+                  {clients.length === 0 && <p style={{ color: 'var(--color-text-muted)' }}>No client logos uploaded yet.</p>}
+                  {clients.map((client) => (
+                    <div className="admin-list-row" key={client.id}>
+                      <div className="admin-client-preview"><img src={client.logo} alt={client.name} /><strong>{client.name}</strong></div>
+                      <button className="btn btn-danger btn-sm" type="button" onClick={() => deleteClient(client.id)}><Trash2 size={14} /> Delete</button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 4. BLOG MANAGEMENT */}
+            {activeTab === 'blogs' && (
+              <div className="admin-content-card">
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-primary-900)' }}>Blog Content Manager</h2>
+                  <span style={{ fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}>Upload article images and publish blog content from the admin panel.</span>
+                </div>
+                <form onSubmit={handleAddBlogSubmit}>
+                  <div className="form-row form-row-2">
+                    <div className="form-group"><label className="form-label required">Blog Title</label><input className="form-control" required value={newBlog.title} onChange={(e) => setNewBlog({ ...newBlog, title: e.target.value })} /></div>
+                    <div className="form-group"><label className="form-label">Category</label><input className="form-control" value={newBlog.category} onChange={(e) => setNewBlog({ ...newBlog, category: e.target.value })} /></div>
+                    <div className="form-group"><label className="form-label">Author</label><input className="form-control" value={newBlog.author} onChange={(e) => setNewBlog({ ...newBlog, author: e.target.value })} /></div>
+                    <div className="form-group"><label className="form-label required">Blog Photo</label><input className="form-control" required type="file" accept="image/*" onChange={(e) => readImageFile(e.target.files[0], (image) => setNewBlog({ ...newBlog, image }))} /></div>
+                  </div>
+                  <div className="form-group"><label className="form-label required">Excerpt</label><textarea className="form-control" required rows={2} value={newBlog.excerpt} onChange={(e) => setNewBlog({ ...newBlog, excerpt: e.target.value })} /></div>
+                  <div className="form-group"><label className="form-label">Article Content</label><textarea className="form-control" rows={6} value={newBlog.contentText} onChange={(e) => setNewBlog({ ...newBlog, contentText: e.target.value })} /></div>
+                  <button className="btn btn-primary btn-sm" type="submit"><Plus size={14} /> Publish Blog</button>
+                </form>
+                <div className="admin-list-stack" style={{ marginTop: '2rem' }}>
+                  {blogs.map((blog) => (
+                    <div className="admin-list-row" key={blog.id}>
+                      <div><strong>{blog.title}</strong><span>{blog.category} • {blog.date}</span></div>
+                      <button className="btn btn-danger btn-sm" type="button" onClick={() => deleteBlog(blog.id)}><Trash2 size={14} /> Delete</button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 5. ENQUIRIES & RFQ TRACKER */}
             {activeTab === 'enquiries' && (
               <div className="admin-content-card">
                 <div style={{ marginBottom: '1.5rem' }}>

@@ -1,12 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { useCMS } from '../context/CMSContext';
-import { CATEGORIES } from '../data/categories';
 import ProductCard from '../components/common/ProductCard';
 import Breadcrumbs from '../components/layout/Breadcrumbs';
 import { Search, Filter, SlidersHorizontal, RotateCcw, PackageSearch, LayoutGrid, List } from 'lucide-react';
 
 export default function ProductsPage({ onNavigate, onOpenQuoteModal, initialCategory = '', initialSubcategory = '' }) {
-  const { products } = useCMS();
+  const { products, categories } = useCMS();
 
   // Filters State
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,9 +19,9 @@ export default function ProductsPage({ onNavigate, onOpenQuoteModal, initialCate
   // Available subcategories for selected category
   const activeSubcategories = useMemo(() => {
     if (selectedCategory === 'all') return [];
-    const cat = CATEGORIES.find((c) => c.slug === selectedCategory);
+    const cat = categories.find((c) => c.slug === selectedCategory);
     return cat ? cat.subcategories : [];
-  }, [selectedCategory]);
+  }, [categories, selectedCategory]);
 
   // Reset Subcategory if Category changes
   const handleCategoryChange = (catSlug) => {
@@ -87,7 +86,7 @@ export default function ProductsPage({ onNavigate, onOpenQuoteModal, initialCate
     return list;
   }, [products, searchQuery, selectedCategory, selectedSubcategory, selectedStock, sortBy]);
 
-  const activeCategoryObj = CATEGORIES.find((c) => c.slug === selectedCategory);
+  const activeCategoryObj = categories.find((c) => c.slug === selectedCategory);
 
   return (
     <div className="products-page">
@@ -156,7 +155,7 @@ export default function ProductsPage({ onNavigate, onOpenQuoteModal, initialCate
                   <span>All Categories</span>
                   <span>({products.length})</span>
                 </li>
-                {CATEGORIES.map((cat) => {
+                {categories.map((cat) => {
                   const count = products.filter((p) => p.category === cat.slug).length;
                   const isSelected = selectedCategory === cat.slug;
                   return (

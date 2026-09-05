@@ -1,11 +1,14 @@
 import React from 'react';
-import { BLOGS } from '../data/blogs';
 import Breadcrumbs from '../components/layout/Breadcrumbs';
 import { Calendar, Clock, User, Share2, ArrowLeft, ArrowRight, ShieldCheck } from 'lucide-react';
+import { useCMS } from '../context/CMSContext';
 
 export default function BlogDetailPage({ slug, onNavigate, onOpenQuoteModal }) {
-  const blog = BLOGS.find((b) => b.slug === slug) || BLOGS[0];
-  const relatedPosts = BLOGS.filter((b) => b.id !== blog.id).slice(0, 2);
+  const { blogs } = useCMS();
+  const blog = blogs.find((b) => b.slug === slug) || blogs[0];
+  const relatedPosts = blog ? blogs.filter((b) => b.id !== blog.id).slice(0, 2) : [];
+
+  if (!blog) return null;
 
   const handleShare = () => {
     if (navigator.share) {

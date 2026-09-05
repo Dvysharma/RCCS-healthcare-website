@@ -1,8 +1,10 @@
 import React from 'react';
-import { CATEGORIES } from '../../data/categories';
 import CategoryCard from '../common/CategoryCard';
+import { useCMS } from '../../context/CMSContext';
 
 export default function CategoryGrid({ onNavigate }) {
+  const { categories } = useCMS();
+
   return (
     <section className="section-padding" style={{ backgroundColor: 'var(--color-bg-page)' }}>
       <div className="container">
@@ -15,7 +17,7 @@ export default function CategoryGrid({ onNavigate }) {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
-          {CATEGORIES.map((category) => (
+          {categories.map((category) => (
             <CategoryCard
               key={category.id}
               category={category}

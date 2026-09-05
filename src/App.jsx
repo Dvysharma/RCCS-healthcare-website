@@ -16,6 +16,7 @@ import BlogPage from './pages/BlogPage';
 import BlogDetailPage from './pages/BlogDetailPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsPage from './pages/TermsPage';
+import CancellationReturnPage from './pages/CancellationReturnPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderConfirmPage from './pages/OrderConfirmPage';
@@ -172,7 +173,16 @@ export default function App() {
       );
     }
 
-    // 11. Shopping Cart
+    // 11. Cancellation & Returns
+    if (pathOnly === '/cancellation-return-policy') {
+      return (
+        <CancellationReturnPage
+          onNavigate={navigate}
+        />
+      );
+    }
+
+    // 12. Shopping Cart
     if (pathOnly === '/cart') {
       return (
         <CartPage
@@ -182,7 +192,7 @@ export default function App() {
       );
     }
 
-    // 12. Checkout
+    // 13. Checkout
     if (pathOnly === '/checkout') {
       return (
         <CheckoutPage
@@ -191,7 +201,7 @@ export default function App() {
       );
     }
 
-    // 13. Order Confirmation: /order-confirmation/:id
+    // 14. Order Confirmation: /order-confirmation/:id
     if (pathOnly.startsWith('/order-confirmation/')) {
       const orderId = pathOnly.replace('/order-confirmation/', '');
       return (
@@ -202,7 +212,7 @@ export default function App() {
       );
     }
 
-    // 14. Customer Account / Login
+    // 15. Customer Account / Login
     if (pathOnly === '/account') {
       return (
         <AccountPage
@@ -211,7 +221,7 @@ export default function App() {
       );
     }
 
-    // 15. Search Results: /search
+    // 16. Search Results: /search
     if (pathOnly === '/search') {
       return (
         <SearchPage
@@ -222,7 +232,7 @@ export default function App() {
       );
     }
 
-    // 16. Admin CMS
+    // 17. Admin CMS
     if (pathOnly === '/admin') {
       return (
         <AdminPage
@@ -231,7 +241,7 @@ export default function App() {
       );
     }
 
-    // 17. 404 Not Found fallback
+    // 18. 404 Not Found fallback
     return (
       <NotFoundPage
         onNavigate={navigate}

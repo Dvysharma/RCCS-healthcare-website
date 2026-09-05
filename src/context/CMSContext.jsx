@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { PRODUCTS as INITIAL_PRODUCTS } from '../data/products';
 import { CATEGORIES as INITIAL_CATEGORIES } from '../data/categories';
 import { SITE_CONFIG as INITIAL_CONFIG } from '../config/siteConfig';
+import { BLOGS as INITIAL_BLOGS } from '../data/blogs';
+import { CLIENTS as INITIAL_CLIENTS } from '../data/clients';
 import { useToast } from './ToastContext';
 
 const CMSContext = createContext(null);
@@ -26,6 +28,26 @@ export function CMSProvider({ children }) {
       return saved ? JSON.parse(saved) : INITIAL_CATEGORIES;
     } catch {
       return INITIAL_CATEGORIES;
+    }
+  });
+
+  // Client logos shown on the homepage
+  const [clients, setClients] = useState(() => {
+    try {
+      const saved = localStorage.getItem('rc_cms_clients');
+      return saved ? JSON.parse(saved) : INITIAL_CLIENTS;
+    } catch {
+      return INITIAL_CLIENTS;
+    }
+  });
+
+  // Blog content managed from the admin panel
+  const [blogs, setBlogs] = useState(() => {
+    try {
+      const saved = localStorage.getItem('rc_cms_blogs');
+      return saved ? JSON.parse(saved) : INITIAL_BLOGS;
+    } catch {
+      return INITIAL_BLOGS;
     }
   });
 
@@ -108,6 +130,18 @@ export function CMSProvider({ children }) {
 
   useEffect(() => {
     try {
+      localStorage.setItem('rc_cms_clients', JSON.stringify(clients));
+    } catch (e) { console.error(e); }
+  }, [clients]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('rc_cms_blogs', JSON.stringify(blogs));
+    } catch (e) { console.error(e); }
+  }, [blogs]);
+
+  useEffect(() => {
+    try {
       localStorage.setItem('rc_cms_enquiries', JSON.stringify(enquiries));
     } catch (e) { console.error(e); }
   }, [enquiries]);
@@ -151,6 +185,63 @@ export function CMSProvider({ children }) {
   const deleteProduct = (productId) => {
     setProducts((prev) => prev.filter((p) => p.id !== productId));
     addToast('Product deleted', 'info');
+  };
+
+  // Category Operations
+  const addCategory = (category) => {
+    const categoryWithId = {
+      ...category,
+      id: category.id || `rc-category-${Date.now()}`,
+      slug: category.slug || category.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+      subcategories: category.subcategories || []
+    };
+    setCategories((prev) => [...prev, categoryWithId]);
+    addToast(`Category "${categoryWithId.name}" added`, 'success');
+  };
+
+  const deleteCategory = (categoryId) => {
+    setCategories((prev) => prev.filter((category) => category.id !== categoryId));
+    addToast('Category deleted', 'info');
+  };
+
+  const moveCategory = (categoryId, direction) => {
+    setCategories((prev) => {
+      const index = prev.findIndex((category) => category.id === categoryId);
+      const nextIndex = index + direction;
+      if (index < 0 || nextIndex < 0 || nextIndex >= prev.length) return prev;
+      const next = [...prev];
+      [next[index], next[nextIndex]] = [next[nextIndex], next[index]];
+      return next;
+    });
+  };
+
+  // Client Logo Operations
+  const addClient = (client) => {
+    setClients((prev) => [{ ...client, id: client.id || `rc-client-${Date.now()}` }, ...prev]);
+    addToast(`Client "${client.name}" added`, 'success');
+  };
+
+  const deleteClient = (clientId) => {
+    setClients((prev) => prev.filter((client) => client.id !== clientId));
+    addToast('Client removed', 'info');
+  };
+
+  // Blog Operations
+  const addBlog = (blog) => {
+    const blogWithId = {
+      ...blog,
+      id: blog.id || `rc-blog-${Date.now()}`,
+      slug: blog.slug || blog.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+      date: blog.date || new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }),
+      content: blog.content || [{ type: 'paragraph', text: blog.excerpt || '' }]
+    };
+    setBlogs((prev) => [blogWithId, ...prev]);
+    addToast(`Blog "${blogWithId.title}" added`, 'success');
+  };
+
+  const deleteBlog = (blogId) => {
+    setBlogs((prev) => prev.filter((blog) => blog.id !== blogId));
+    addToast('Blog removed', 'info');
   };
 
   // Enquiry Submission
@@ -210,9 +301,13 @@ export function CMSProvider({ children }) {
   const resetToFactoryDefaults = () => {
     setProducts(INITIAL_PRODUCTS);
     setCategories(INITIAL_CATEGORIES);
+    setClients(INITIAL_CLIENTS);
+    setBlogs(INITIAL_BLOGS);
     setSiteConfig(INITIAL_CONFIG);
     localStorage.removeItem('rc_cms_products');
     localStorage.removeItem('rc_cms_categories');
+    localStorage.removeItem('rc_cms_clients');
+    localStorage.removeItem('rc_cms_blogs');
     localStorage.removeItem('rc_cms_config');
     addToast('Reset to original default catalogue data', 'info');
   };
@@ -223,6 +318,8 @@ export function CMSProvider({ children }) {
       exportDate: new Date().toISOString(),
       siteConfig,
       categories,
+      clients,
+      blogs,
       products,
       enquiries,
       orders
@@ -242,12 +339,21 @@ export function CMSProvider({ children }) {
       value={{
         products,
         categories,
+        clients,
+        blogs,
         enquiries,
         orders,
         siteConfig,
         addProduct,
         updateProduct,
         deleteProduct,
+        addCategory,
+        deleteCategory,
+        moveCategory,
+        addClient,
+        deleteClient,
+        addBlog,
+        deleteBlog,
         submitEnquiry,
         updateEnquiryStatus,
         createOrder,

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { CATEGORIES } from '../../data/categories';
 import { SITE_CONFIG } from '../../config/siteConfig';
 import { X, ChevronDown, ChevronRight, Phone, Mail, MapPin, FileText } from 'lucide-react';
+import { useCMS } from '../../context/CMSContext';
 
 export default function MobileNav({ isOpen, onClose, onNavigate }) {
+  const { categories } = useCMS();
   const [expandedCategory, setExpandedCategory] = useState(null);
 
   if (!isOpen) return null;
@@ -64,7 +65,7 @@ export default function MobileNav({ isOpen, onClose, onNavigate }) {
             >
               Medical Categories
             </div>
-            {CATEGORIES.map((cat) => {
+            {categories.map((cat) => {
               const isExpanded = expandedCategory === cat.id;
               return (
                 <div key={cat.id}>

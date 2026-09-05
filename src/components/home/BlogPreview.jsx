@@ -1,8 +1,10 @@
 import React from 'react';
-import { BLOGS } from '../../data/blogs';
-import { ArrowRight, Calendar, Clock } from 'lucide-react';
+import { ArrowRight, Calendar } from 'lucide-react';
+import { useCMS } from '../../context/CMSContext';
 
 export default function BlogPreview({ onNavigate }) {
+  const { blogs } = useCMS();
+
   return (
     <section className="section-padding" style={{ backgroundColor: 'var(--color-bg-page)', borderTop: '1px solid var(--color-border)' }}>
       <div className="container">
@@ -25,7 +27,7 @@ export default function BlogPreview({ onNavigate }) {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
-          {BLOGS.slice(0, 3).map((blog) => (
+          {blogs.slice(0, 3).map((blog) => (
             <div
               key={blog.id}
               className="why-card"

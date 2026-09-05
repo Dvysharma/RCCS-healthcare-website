@@ -1,9 +1,12 @@
 import React from 'react';
 import { SITE_CONFIG } from '../../config/siteConfig';
-import { CATEGORIES } from '../../data/categories';
-import { Phone, Mail, MapPin, Building2, ShieldCheck } from 'lucide-react';
+import { Phone, Mail, MapPin, ShieldCheck, ExternalLink } from 'lucide-react';
+import { FaWhatsapp, FaInstagram, FaFacebookF, FaLinkedinIn, FaYoutube } from 'react-icons/fa';
+import { useCMS } from '../../context/CMSContext';
 
 export default function Footer({ onNavigate }) {
+  const { categories } = useCMS();
+
   return (
     <footer className="site-footer">
       <div className="container">
@@ -45,9 +48,6 @@ export default function Footer({ onNavigate }) {
               <li>
                 <a href="/contact" onClick={(e) => { e.preventDefault(); onNavigate('/contact'); }}>Contact & Inquiries</a>
               </li>
-              <li>
-                <a href="/admin" onClick={(e) => { e.preventDefault(); onNavigate('/admin'); }} style={{ color: '#64748B' }}>Admin Dashboard</a>
-              </li>
             </ul>
           </div>
 
@@ -55,7 +55,7 @@ export default function Footer({ onNavigate }) {
           <div>
             <div className="footer-col-title">Categories</div>
             <ul className="footer-links">
-              {CATEGORIES.slice(0, 6).map((cat) => (
+              {categories.filter((cat) => SITE_CONFIG.footerCategorySlugs.includes(cat.slug)).map((cat) => (
                 <li key={cat.id}>
                   <a
                     href={`#category-${cat.slug}`}
@@ -68,18 +68,6 @@ export default function Footer({ onNavigate }) {
                   </a>
                 </li>
               ))}
-              <li>
-                <a
-                  href="/products"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onNavigate('/products');
-                  }}
-                  style={{ color: '#5EEAD4', fontWeight: 600 }}
-                >
-                  View All 10 Categories →
-                </a>
-              </li>
             </ul>
           </div>
 
@@ -108,6 +96,12 @@ export default function Footer({ onNavigate }) {
                   {SITE_CONFIG.primaryEmail}
                 </a>
               </li>
+              <li className="footer-contact-item">
+                <MapPin size={18} color="#5EEAD4" style={{ flexShrink: 0 }} />
+                <a href={SITE_CONFIG.googleMapsUrl} target="_blank" rel="noreferrer" style={{ color: '#FFFFFF' }}>
+                  Open location in Google Maps <ExternalLink size={13} style={{ verticalAlign: 'middle' }} />
+                </a>
+              </li>
             </ul>
           </div>
         </div>
@@ -115,7 +109,10 @@ export default function Footer({ onNavigate }) {
         {/* Footer Bottom Bar */}
         <div className="footer-bottom">
           <div>
-            {SITE_CONFIG.legal.copyrightText}
+              <div>
+                {SITE_CONFIG.legal.copyrightText}
+                <span style={{ marginLeft: '0.5rem', color: '#CBD5E1' }}>| GST Registered | ISO 13485 Certified Distributor</span>
+              </div>
           </div>
           <div className="footer-bottom-links">
             <a
@@ -126,6 +123,16 @@ export default function Footer({ onNavigate }) {
               }}
             >
               Privacy Policy
+            </a>
+            <span>•</span>
+            <a
+              href="/cancellation-return-policy"
+              onClick={(e) => {
+                e.preventDefault();
+                onNavigate('/cancellation-return-policy');
+              }}
+            >
+              Cancellation & Replacement
             </a>
             <span>•</span>
             <a
@@ -148,6 +155,21 @@ export default function Footer({ onNavigate }) {
               Bulk Procurement
             </a>
           </div>
+        </div>
+        <div className="footer-attribution">
+          <span>{SITE_CONFIG.poweredBy}</span>
+          <div className="footer-social-links" aria-label="Social media links">
+            <a href={SITE_CONFIG.socialLinks.whatsapp} target="_blank" rel="noreferrer" aria-label="WhatsApp" title="WhatsApp"><FaWhatsapp /></a>
+            <a href={SITE_CONFIG.socialLinks.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" title="Instagram"><FaInstagram /></a>
+            <a href={SITE_CONFIG.socialLinks.facebook} target="_blank" rel="noreferrer" aria-label="Facebook" title="Facebook"><FaFacebookF /></a>
+            <a href={SITE_CONFIG.socialLinks.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" title="LinkedIn"><FaLinkedinIn /></a>
+            <a href={SITE_CONFIG.socialLinks.youtube} target="_blank" rel="noreferrer" aria-label="YouTube" title="YouTube"><FaYoutube /></a>
+          </div>
+        </div>
+        <div className="footer-consultancy-links">
+          <span>{SITE_CONFIG.poweredBy}</span>
+          <a href={SITE_CONFIG.consultancyLinks.website} target="_blank" rel="noreferrer">{SITE_CONFIG.consultancyLinks.website}</a>
+          <a href={SITE_CONFIG.consultancyLinks.instagram} target="_blank" rel="noreferrer">{SITE_CONFIG.consultancyLinks.handle}</a>
         </div>
       </div>
     </footer>

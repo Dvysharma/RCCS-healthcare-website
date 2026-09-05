@@ -9,6 +9,7 @@ import Segments from '../components/home/Segments';
 import AboutPreview from '../components/home/AboutPreview';
 import EnquiryCta from '../components/home/EnquiryCta';
 import BlogPreview from '../components/home/BlogPreview';
+import ClientsPreview from '../components/home/ClientsPreview';
 
 export default function HomePage({ onNavigate, onOpenQuoteModal, onOpenEnquiryModal }) {
   return (
@@ -43,10 +44,13 @@ export default function HomePage({ onNavigate, onOpenQuoteModal, onOpenEnquiryMo
       {/* 8. About Preview */}
       <AboutPreview onNavigate={onNavigate} />
 
-      {/* 9. Product Enquiry CTA (Can't find what you need?) */}
+      {/* 9. Client Partners */}
+      <ClientsPreview />
+
+      {/* 10. Product Enquiry CTA (Can't find what you need?) */}
       <EnquiryCta onOpenEnquiryModal={onOpenEnquiryModal} />
 
-      {/* 10. Healthcare Insights / Blog Preview */}
+      {/* 11. Healthcare Insights / Blog Preview */}
       <BlogPreview onNavigate={onNavigate} />
     </div>
   );

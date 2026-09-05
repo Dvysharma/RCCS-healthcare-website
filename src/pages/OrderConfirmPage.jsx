@@ -139,7 +139,7 @@ export default function OrderConfirmPage({ orderId, onNavigate }) {
 
             <a href={`tel:${SITE_CONFIG.primaryPhoneClean}`} className="btn btn-secondary">
               <Phone size={14} />
-              <span>Contact Dispatch Desk (+91 7060187780)</span>
+              <span>Contact Dispatch Desk ({SITE_CONFIG.primaryPhone})</span>
             </a>
           </div>
         </div>

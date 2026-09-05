@@ -15,18 +15,41 @@ export const SITE_CONFIG = {
   gstin: "05AFSFS5983D1ZG",
   
   // Primary Website Contact (as specified in main brief)
-  primaryPhone: "+91 7060187780",
-  primaryPhoneClean: "+917060187780",
+  primaryPhone: "+91 9410103766",
+  primaryPhoneClean: "+919410103766",
   primaryEmail: "info@rchealthcareventures.com",
   
   // Alternate contact present in privacy policy (flagged for client verification prior to production)
-  secondaryPhone: "+91 9410103766",
-  secondaryPhoneClean: "+919410103766",
-  phoneVerificationNote: "Note: +91 7060187780 is the primary contact. +91 9410103766 was noted in legal docs and is retained for client verification.",
+  secondaryPhone: "+91 7060187780",
+  secondaryPhoneClean: "+917060187780",
+  phoneVerificationNote: "The primary supply desk number is +91 9410103766.",
   
   // WhatsApp Integration
-  whatsappNumber: "+917060187780",
-  whatsappDisplay: "+91 7060187780",
+  whatsappNumber: "+919410103766",
+  whatsappDisplay: "+91 9410103766",
+
+  googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Royal+Crown+Healthcare+Ventures+Dehradun",
+  socialLinks: {
+    whatsapp: "https://wa.me/919410103766",
+    instagram: "https://www.instagram.com/royalcrownhealthcareventures?igsi=MWF0N21uaHVxYmhseA==",
+    facebook: "https://www.facebook.com/share/19BGFqarui/",
+    linkedin: "https://www.linkedin.com/company/royal-crown-healthcare-ventures/",
+    youtube: "https://youtube.com/@royalcrownhealthcareventures?si=EPNbMv5QBmWvuf0E"
+  },
+  footerCategorySlugs: [
+    "cssd-sterilization",
+    "surgical-gloves-ppe",
+    "syringes-needles",
+    "iv-therapy",
+    "catheters-urology",
+    "dressing-wound-care"
+  ],
+  poweredBy: "Propelled by: Royal Crown Consultancy Services & @RCCS Global",
+  consultancyLinks: {
+    website: "https://www.rccsglobal.com",
+    instagram: "https://www.instagram.com/rccsglobal?igsi=YTZsbXUzb29rd21m",
+    handle: "@Rccsglobal"
+  },
   
   // Location & Physical Facility
   address: {
@@ -45,8 +68,8 @@ export const SITE_CONFIG = {
   // Legal Details
   legal: {
     effectiveDate: "23 August 2026",
-    copyrightYear: "2026",
-    copyrightText: "© 2026 Royal Crown Healthcare Ventures. All Rights Reserved."
+    copyrightYear: "2032",
+    copyrightText: "© 2032 Royal Crown Healthcare Ventures. All rights reserved."
   },
 
   // Trust pillars without fabricated statistics

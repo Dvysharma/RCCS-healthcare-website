@@ -23,6 +23,7 @@ export default function Header({ currentPath, onNavigate, onOpenQuoteModal }) {
   const { user, isAuthenticated } = useAuth();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isProductsMenuOpen, setIsProductsMenuOpen] = useState(false);
 
   return (
     <>
@@ -35,18 +36,18 @@ export default function Header({ currentPath, onNavigate, onOpenQuoteModal }) {
                 <Phone size={13} />
                 <a href={`tel:${SITE_CONFIG.primaryPhoneClean}`}>{SITE_CONFIG.primaryPhone}</a>
               </span>
-              <span className="topbar-item" style={{ display: 'none', md: 'inline-flex' }}>
+              <span className="topbar-item topbar-email">
                 <Mail size={13} />
                 <a href={`mailto:${SITE_CONFIG.primaryEmail}`}>{SITE_CONFIG.primaryEmail}</a>
               </span>
-              <span className="topbar-item" style={{ display: 'none', lg: 'inline-flex' }}>
+              <span className="topbar-item topbar-location">
                 <MapPin size={13} />
                 <span>Haridwar Bypass Rd, Dehradun</span>
               </span>
             </div>
 
             <div className="topbar-right">
-              <span className="topbar-item" style={{ display: 'none', sm: 'inline-flex', fontSize: '0.75rem' }}>
+              <span className="topbar-item topbar-gstin" style={{ fontSize: '0.75rem' }}>
                 <Building2 size={13} />
                 <span>GSTIN: <strong>{SITE_CONFIG.gstin}</strong></span>
               </span>
@@ -93,20 +94,21 @@ export default function Header({ currentPath, onNavigate, onOpenQuoteModal }) {
                 Home
               </a>
 
-              <div className="nav-item-dropdown">
+              <div className={`nav-item-dropdown ${isProductsMenuOpen ? 'is-open' : ''}`}>
                 <a
                   href="/products"
                   onClick={(e) => {
                     e.preventDefault();
-                    onNavigate('/products');
+                    setIsProductsMenuOpen((isOpen) => !isOpen);
                   }}
                   className={`nav-link ${currentPath.startsWith('/products') || currentPath.startsWith('/category') ? 'active' : ''}`}
+                  aria-expanded={isProductsMenuOpen}
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
                 >
                   <span>Products</span>
                   <ChevronDown size={14} />
                 </a>
-                <MegaMenu onNavigate={onNavigate} />
+                <MegaMenu onNavigate={onNavigate} isOpen={isProductsMenuOpen} />
               </div>
 
               <a
@@ -146,13 +148,12 @@ export default function Header({ currentPath, onNavigate, onOpenQuoteModal }) {
             {/* Header Right Actions */}
             <div className="header-actions">
               {/* Search Toggle */}
-              <div style={{ width: '220px', display: 'none', lg: 'block' }}>
+              <div className="desktop-search">
                 <SearchBar onNavigate={onNavigate} />
               </div>
 
               <button
-                className="action-icon-btn"
-                style={{ display: 'flex', lg: 'none' }}
+                className="action-icon-btn mobile-search-toggle"
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
                 aria-label="Toggle search"
               >
@@ -161,7 +162,7 @@ export default function Header({ currentPath, onNavigate, onOpenQuoteModal }) {
 
               {/* Account */}
               <button
-                className="action-icon-btn"
+                className="action-icon-btn header-account"
                 onClick={() => onNavigate('/account')}
                 title={isAuthenticated ? `Logged in: ${user?.name}` : "Customer Account / Login"}
                 aria-label="User Account"
@@ -171,7 +172,7 @@ export default function Header({ currentPath, onNavigate, onOpenQuoteModal }) {
 
               {/* Quote Basket (B2B RFQ) */}
               <button
-                className="action-icon-btn"
+                className="action-icon-btn header-quote"
                 onClick={() => onOpenQuoteModal()}
                 title="B2B Quotation List"
                 aria-label="View Quotation Basket"
@@ -182,7 +183,7 @@ export default function Header({ currentPath, onNavigate, onOpenQuoteModal }) {
 
               {/* Shopping Cart */}
               <button
-                className="action-icon-btn"
+                className="action-icon-btn header-cart"
                 onClick={() => onNavigate('/cart')}
                 title="Shopping Cart"
                 aria-label="View Shopping Cart"
@@ -193,9 +194,8 @@ export default function Header({ currentPath, onNavigate, onOpenQuoteModal }) {
 
               {/* Primary CTA */}
               <button
-                className="btn btn-primary btn-sm"
                 onClick={() => onOpenQuoteModal()}
-                style={{ display: 'none', sm: 'inline-flex' }}
+                className="btn btn-primary btn-sm header-cta"
               >
                 Request a Quote
               </button>
@@ -213,7 +213,7 @@ export default function Header({ currentPath, onNavigate, onOpenQuoteModal }) {
 
           {/* Mobile Search Expand */}
           {isSearchOpen && (
-            <div style={{ paddingBottom: '0.75rem', display: 'block', lg: 'none' }}>
+            <div className="mobile-search-panel">
               <SearchBar onNavigate={onNavigate} autoFocus onClose={() => setIsSearchOpen(false)} />
             </div>
           )}

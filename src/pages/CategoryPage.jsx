@@ -1,16 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import { useCMS } from '../context/CMSContext';
-import { CATEGORIES } from '../data/categories';
 import ProductCard from '../components/common/ProductCard';
 import Breadcrumbs from '../components/layout/Breadcrumbs';
 import { ArrowRight, PackageSearch, Layers } from 'lucide-react';
 
 export default function CategoryPage({ slug, onNavigate, onOpenQuoteModal }) {
-  const { products } = useCMS();
+  const { products, categories } = useCMS();
   const [selectedSub, setSelectedSub] = useState('all');
   const [sortBy, setSortBy] = useState('featured');
 
-  const category = CATEGORIES.find((c) => c.slug === slug) || CATEGORIES[0];
+  const category = categories.find((c) => c.slug === slug) || categories[0];
 
   const categoryProducts = useMemo(() => {
     let list = products.filter((p) => p.category === category.slug);
@@ -30,7 +29,7 @@ export default function CategoryPage({ slug, onNavigate, onOpenQuoteModal }) {
     return list;
   }, [products, category.slug, selectedSub, sortBy]);
 
-  const relatedCategories = CATEGORIES.filter((c) => c.slug !== category.slug).slice(0, 3);
+  const relatedCategories = categories.filter((c) => c.slug !== category.slug).slice(0, 3);
 
   return (
     <div className="category-page">

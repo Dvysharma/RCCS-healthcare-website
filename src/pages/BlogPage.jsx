@@ -1,25 +1,26 @@
 import React, { useState, useMemo } from 'react';
-import { BLOGS } from '../data/blogs';
 import Breadcrumbs from '../components/layout/Breadcrumbs';
 import { Search, Calendar, Clock, ArrowRight, BookOpen } from 'lucide-react';
+import { useCMS } from '../context/CMSContext';
 
 export default function BlogPage({ onNavigate }) {
+  const { blogs } = useCMS();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
   const categories = ['All', 'Infection Control', 'PPE & Safety', 'Healthcare Procurement'];
 
   const filteredBlogs = useMemo(() => {
-    return BLOGS.filter((b) => {
+    return blogs.filter((b) => {
       const matchCat = selectedCategory === 'All' || b.category === selectedCategory;
       const matchSearch = !searchQuery.trim() ||
         b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         b.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
       return matchCat && matchSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [blogs, selectedCategory, searchQuery]);
 
-  const featuredPost = BLOGS[0];
+  const featuredPost = blogs[0];
 
   return (
     <div className="blog-page">
